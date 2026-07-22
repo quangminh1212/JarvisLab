@@ -50,8 +50,18 @@ def chime_done():
 # Support:
 #   listen.py [language] [timeout] [mic_index] [wait_for_speech]
 #   listen.py --wav file.wav [language]
+#   VOICE_INJECT_WAV=/path/file.wav  → skip mic, STT that file (auto-test / CI)
 _WAV_PATH: str | None = None
-if len(sys.argv) > 1 and sys.argv[1] == "--wav":
+_INJECT = os.environ.get("VOICE_INJECT_WAV", "").strip()
+if _INJECT:
+    _WAV_PATH = _INJECT
+    LANGUAGE = os.environ.get("VOICE_LANGUAGE", "vi-VN")
+    if len(sys.argv) > 1 and not sys.argv[1].startswith("-"):
+        LANGUAGE = sys.argv[1]
+    TIMEOUT = 30.0
+    MIC_INDEX = -1
+    WAIT_FOR_SPEECH = False
+elif len(sys.argv) > 1 and sys.argv[1] == "--wav":
     _WAV_PATH = sys.argv[2] if len(sys.argv) > 2 else ""
     LANGUAGE = sys.argv[3] if len(sys.argv) > 3 else os.environ.get("VOICE_LANGUAGE", "vi-VN")
     TIMEOUT = 30.0

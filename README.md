@@ -53,23 +53,36 @@ Nói "tạm biệt" / "bye" / "thôi" để dừng.
 ### Hermes
 
 ```bash
-hermes mcp add jarvislab node C:/Dev/JarvisLab/bin/mcp-voice-bridge.js
+# Sửa MCP config (env đúng chỗ + VOICE_PYTHON)
+cd C:/Dev/JarvisLab
+npm run fix:hermes-mcp
 hermes mcp test jarvislab
+
+# Auto test không cần nói
+npm run test:auto
 ```
 
-Hoặc trong config:
+Config đã có trong `%LOCALAPPDATA%/hermes/config.yaml` → `mcp_servers.jarvislab`.
 
-```yaml
-mcp_servers:
-  jarvislab:
-    command: node
-    args:
-      - C:/Dev/JarvisLab/bin/mcp-voice-bridge.js
-    env:
-      PYTHONUTF8: "1"
-      PYTHONIOENCODING: "utf-8"
-      VOICE_LANGUAGE: "vi-VN"
+Tool names trong session Hermes:
+
 ```
+mcp__jarvislab__voice_speak
+mcp__jarvislab__voice_listen
+mcp__jarvislab__voice_wait_for_speech
+mcp__jarvislab__voice_ask
+mcp__jarvislab__list_audio_devices
+```
+
+Skill: `jarvislab-voice` (load `/skill jarvislab-voice` hoặc `hermes -s jarvislab-voice`).
+
+Vòng hội thoại hands-free:
+
+```
+voice_speak → voice_wait_for_speech → trả lời ngắn → voice_speak → lặp
+```
+
+Session mới sau khi sửa MCP (restart desktop/CLI).
 
 ### Agents auto-discovery
 

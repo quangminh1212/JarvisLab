@@ -17,7 +17,7 @@ export const config = {
   python: process.env.VOICE_PYTHON || 'python',
 
   // Microphone device index (-1 = system default)
-  micIndex: parseInt(process.env.VOICE_MIC_INDEX ?? '-1'),
+  micIndex: parseInt(process.env.VOICE_MIC_INDEX ?? '-1', 10),
 
   // Default language code for STT + TTS
   language: process.env.VOICE_LANGUAGE || 'vi-VN',
