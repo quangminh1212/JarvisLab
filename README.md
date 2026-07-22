@@ -23,19 +23,19 @@ cp .env.example .env   # hoặc dùng .env có sẵn
 ## Chạy thử
 
 ```bash
-# Self-test đầy đủ
+# Self-test + E2E hội thoại (TTS/STT/LLM/latency)
 npm test
+npm run test:e2e
 
 # Thiết bị / TTS / nghe
 npm run test:devices
 npm run test:speak
 npm run test:listen
 
-# Gọi điện standalone (LLM qua xAI OAuth Hermes hoặc JARVIS_API_KEY)
+# Gọi điện standalone (in-process, low latency)
 npm run call
-# hoặc
 python jarvis_call.py
-python jarvis_call.py --text "Xin chào" --no-greeting   # dry-run không mic
+python jarvis_call.py --text "Xin chào" --no-greeting
 ```
 
 ## Always-on voice với agent
@@ -90,12 +90,14 @@ JarvisLab/
 ├── src/server.js             # MCP tools
 ├── src/config.js
 ├── python/
-│   ├── speak.py              # TTS
-│   ├── listen.py             # VAD + STT
+│   ├── audio_core.py         # In-process TTS/STT core (low latency)
+│   ├── speak.py              # TTS CLI (MCP)
+│   ├── listen.py             # VAD + STT CLI (MCP)
 │   ├── devices.py
 │   └── llm.py                # xAI / OpenAI-compatible / rules
-├── jarvis_call.py            # Phone-call loop
+├── jarvis_call.py            # Phone-call loop (in-process)
 ├── scripts/selftest.py
+├── scripts/e2e_conversation.py
 └── .env
 ```
 

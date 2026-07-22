@@ -66,12 +66,12 @@ else:
 # ── VAD constants (tuned for weak USB mics) ───────────────────────────────────
 FS = 16000
 CHUNK_SEC = 0.08
-SILENCE_SEC = float(os.environ.get("VOICE_SILENCE_SEC", "0.85"))
-MIN_SPEECH_SEC = float(os.environ.get("VOICE_MIN_SPEECH_SEC", "0.45"))
-THRESHOLD = float(os.environ.get("VOICE_THRESHOLD", "0.0025"))
-GAIN = float(os.environ.get("VOICE_GAIN", "50.0"))
-NOISE_FLOOR_SEC = float(os.environ.get("VOICE_NOISE_FLOOR_SEC", "0.9"))
-DYNAMIC_THRESHOLD_MULT = float(os.environ.get("VOICE_DYN_MULT", "2.2"))
+SILENCE_SEC = float(os.environ.get("VOICE_SILENCE_SEC", "0.75"))
+MIN_SPEECH_SEC = float(os.environ.get("VOICE_MIN_SPEECH_SEC", "0.4"))
+THRESHOLD = float(os.environ.get("VOICE_THRESHOLD", "0.0020"))
+GAIN = float(os.environ.get("VOICE_GAIN", "70.0"))
+NOISE_FLOOR_SEC = float(os.environ.get("VOICE_NOISE_FLOOR_SEC", "0.7"))
+DYNAMIC_THRESHOLD_MULT = float(os.environ.get("VOICE_DYN_MULT", "2.0"))
 CHIME = os.environ.get("VOICE_CHIME", "1") not in ("0", "false", "False", "no")
 
 

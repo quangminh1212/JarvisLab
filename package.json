@@ -1,6 +1,6 @@
 {
   "name": "jarvislab",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "JarvisLab — MCP + standalone voice bridge so AI agents talk with humans via mic/speaker like a real phone call",
   "main": "src/server.js",
   "type": "module",
@@ -12,6 +12,7 @@
     "dev": "node --watch bin/mcp-voice-bridge.js",
     "call": "python jarvis_call.py",
     "test": "python scripts/selftest.py",
+    "test:e2e": "python scripts/e2e_conversation.py",
     "test:speak": "python python/speak.py \"Xin chào, tôi là Jarvis\" vi-VN",
     "test:listen": "python python/listen.py vi-VN 15",
     "test:devices": "python python/devices.py",
