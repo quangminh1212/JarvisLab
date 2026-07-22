@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (and other MCP-compatible agents) whe
 
 ## Project Overview
 
-**Jarrvis** is a bidirectional voice MCP server for Windows.
+**JarvisLab** is a bidirectional voice MCP server for Windows.
 It exposes four tools — `voice_listen`, `voice_speak`, `voice_ask`, `list_audio_devices` — enabling AI agents to have real voice conversations with the user via microphone and speakers.
 
 ## Quick Start
@@ -40,10 +40,10 @@ Hermes does not support project-level MCP config yet. Add manually to `~/.hermes
 
 ```yaml
 mcp_servers:
-  jarrvis:
+  jarvislab:
     command: node
     args:
-      - C:/Dev/XLab_Jarrvis/bin/mcp-voice-bridge.js
+      - C:/Dev/JarvisLab/bin/mcp-voice-bridge.js
     env:
       PYTHONUTF8: "1"
       PYTHONIOENCODING: "utf-8"
@@ -51,7 +51,7 @@ mcp_servers:
 
 Or use the Hermes CLI (from the project directory):
 ```bash
-hermes mcp add jarrvis node bin/mcp-voice-bridge.js
+hermes mcp add jarvislab node bin/mcp-voice-bridge.js
 ```
 
 ### OpenClaw — global setup
@@ -59,7 +59,7 @@ hermes mcp add jarrvis node bin/mcp-voice-bridge.js
 OpenClaw manages MCP servers via CLI:
 ```bash
 # From the project directory
-openclaw mcp add jarrvis --command "node" --args "bin/mcp-voice-bridge.js" --env PYTHONUTF8=1 --env PYTHONIOENCODING=utf-8
+openclaw mcp add jarvislab --command "node" --args "bin/mcp-voice-bridge.js" --env PYTHONUTF8=1 --env PYTHONIOENCODING=utf-8
 
 # Verify
 openclaw mcp status
@@ -67,7 +67,7 @@ openclaw mcp status
 
 The repo includes `.mcp.json`, so Claude Code auto-discovers the server when opened from this directory:
 ```bash
-cd XLab_Jarrvis
+cd JarvisLab
 claude
 ```
 
@@ -94,6 +94,8 @@ npm start                  # Run MCP server
 npm run test:devices       # List audio devices
 npm run test:speak         # Test TTS output
 npm run test:listen        # Test mic recording + STT
+npm run call               # Standalone phone-call loop
+npm test                   # Full self-test
 ```
 
 ## Tools

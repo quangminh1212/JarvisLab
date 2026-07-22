@@ -1,12 +1,13 @@
 {
   "mcpServers": {
-    "jarrvis": {
+    "jarvislab": {
       "type": "stdio",
       "command": "node",
       "args": ["bin/mcp-voice-bridge.js"],
       "env": {
         "PYTHONUTF8": "1",
-        "PYTHONIOENCODING": "utf-8"
+        "PYTHONIOENCODING": "utf-8",
+        "VOICE_LANGUAGE": "vi-VN"
       }
     }
   }

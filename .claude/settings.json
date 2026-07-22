@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "mcp__jarrvis__.*",
+        "matcher": "mcp__jarvislab__.*",
         "hooks": [
           {
             "type": "command",
@@ -13,7 +13,7 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "mcp__jarrvis__voice_listen",
+        "matcher": "mcp__jarvislab__voice_listen",
         "hooks": [
           {
             "type": "command",

@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "jarrvis": {
+    "jarvislab": {
       "command": "node",
       "args": ["bin/mcp-voice-bridge.js"],
       "env": {

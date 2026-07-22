@@ -124,8 +124,18 @@ const TOOLS = [
 function runPython(scriptName, args = [], timeoutMs = 120_000) {
   return new Promise((resolve, reject) => {
     const scriptPath = join(config.pythonDir, scriptName);
+    const env = {
+      ...process.env,
+      PYTHONUTF8: '1',
+      PYTHONIOENCODING: 'utf-8',
+      VOICE_LANGUAGE: config.language,
+      VOICE_MIC_INDEX: String(config.micIndex),
+    };
+    if (config.ttsVoice) env.VOICE_TTS_VOICE = config.ttsVoice;
+
     const proc = spawn(config.python, [scriptPath, ...args.map(String)], {
       stdio: ['ignore', 'pipe', 'pipe'],
+      env,
     });
 
     let stdout = '';
@@ -175,7 +185,7 @@ function mkError(msg) {
 // ── MCP Server ────────────────────────────────────────────────────────────────
 export async function createServer() {
   const server = new Server(
-    { name: 'jarrvis', version: '1.0.0' },
+    { name: 'jarvislab', version: '1.1.0' },
     { capabilities: { tools: {} } }
   );
 

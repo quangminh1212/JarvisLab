@@ -1,5 +1,5 @@
 [[mcp_servers]]
-name = "jarrvis"
+name = "jarvislab"
 transport = "stdio"
 command = "node"
 args = [
