@@ -1,16 +1,23 @@
 ---
 name: jarvislab-voice
-description: "JarvisLab voice bridge via MCP — talk with user by mic/speaker like a phone call. Use when user wants voice chat, nói chuyện giọng nói, gọi điện AI, voice_speak/listen."
-version: 1.0.0
+description: "JarvisLab voice bridge via MCP — talk with user by mic/speaker like a phone call. Use when user wants voice chat, nói chuyện giọng nói, gọi điện AI, voice_speak/listen, jarvis call."
+version: 1.3.0
+platforms: [windows]
+metadata:
+  hermes:
+    tags: [JarvisLab, voice, STT, TTS, MCP, phone-call, mic, Hermes]
+    related_skills: [hermes-agent]
 ---
 
 # JarvisLab Voice (Hermes)
 
-MCP server **jarvislab** exposes real-time voice I/O on this machine.
+**SoT:** `C:\Dev\JarvisLab` · MCP server **`jarvislab`**
 
-## Tools (names in Hermes)
+Goal: talk **like a real phone call** — listen → LLM → speak → loop.
 
-After MCP discovery (this install uses **double underscore**):
+## Tools (Hermes names)
+
+After MCP discovery (double underscore):
 
 | Hermes tool name | What it does |
 |------------------|--------------|
@@ -20,11 +27,9 @@ After MCP discovery (this install uses **double underscore**):
 | `mcp__jarvislab__voice_ask` | Speak question → listen answer |
 | `mcp__jarvislab__list_audio_devices` | List mic/speakers |
 
-Some Hermes builds use `mcp_jarvislab_*` (single underscore). Match whatever `list tools` shows.
+Some builds use `mcp_jarvislab_*` (single underscore). Match whatever tool list shows.
 
 ## Phone-call loop (always-on)
-
-When user wants hands-free conversation:
 
 ```
 1. mcp__jarvislab__voice_speak  "Xin chào..."
@@ -44,25 +49,36 @@ Stop phrases: tạm biệt, bye, thôi, dừng, cúp máy.
 - After TTS, do not call listen until speak returns (echo)
 - If listen empty → ask user to speak closer to mic / retry once
 
+## Attach / diagnose
+
+```powershell
+powershell -File C:\Dev\JarvisLab\scripts\install.ps1
+hermes mcp list
+hermes mcp test jarvislab
+cd C:/Dev/JarvisLab
+npm test
+node scripts/mcp_list.js
+npm run test:auto   # headless, no human speech
+```
+
 ## Standalone (no MCP)
 
 ```bash
 cd C:/Dev/JarvisLab
 npm run call
-# or
-python jarvis_call.py
-```
-
-## Diagnose
-
-```bash
-hermes mcp list
-hermes mcp test jarvislab
-cd C:/Dev/JarvisLab && npm test && node scripts/auto_full_test.js
-npm run test:devices
+python jarvis_call.py --text "Xin chào" --no-greeting
 ```
 
 ## Config
 
-Hermes: `~/AppData/Local/hermes/config.yaml` → `mcp_servers.jarvislab`  
-Project: `C:/Dev/JarvisLab` — `.env` for gain/mic/language.
+- Hermes: `%LOCALAPPDATA%/hermes/config.yaml` → `mcp_servers.jarvislab`
+- Fix env-in-args bug: `python C:/Dev/JarvisLab/scripts/fix_hermes_mcp.py`
+- Required env: `VOICE_PYTHON`, `PYTHONUTF8=1`, `VOICE_LANGUAGE=vi-VN`, gain/timeout knobs
+- Mic USB weak: `VOICE_GAIN=70`, `VOICE_THRESHOLD=0.002`, `VOICE_SILENCE_SEC=0.75`
+
+## Pitfalls
+
+1. MCP env stuck in `args` → re-run `fix_hermes_mcp.py`
+2. No `VOICE_PYTHON` under Hermes filtered child env → audio scripts fail
+3. Block on live mic when user asked auto-test → use inject WAV / `test:auto`
+4. Skill not loaded → session still works if MCP tools present, but prefer `/jarvislab-voice`
