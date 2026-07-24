@@ -1,0 +1,41 @@
+schema_version: "1"
+lab: jarvislab
+entries:
+  - id: edge-tts
+    url: https://github.com/rany2/edge-tts
+    license: GPL-3.0
+    status: integrated
+    role: Neural TTS backend (python/speak.py)
+    evidence:
+      - python/speak.py
+      - requirements.txt
+  - id: mcp-sdk
+    url: https://github.com/modelcontextprotocol/python-sdk
+    license: MIT
+    status: integrated
+    role: MCP stdio server for agent tools
+    evidence:
+      - src/server.js
+      - package.json
+  - id: speech-recognition
+    url: https://github.com/Uberi/speech_recognition
+    license: BSD
+    status: integrated
+    role: Google STT + mic capture path
+    evidence:
+      - python/listen.py
+      - requirements.txt
+  - id: jarvice
+    url: https://github.com/ironicgitposting/Jarvice
+    license: MIT
+    status: referenced
+    role: OpenClaw voice bridge (faster-whisper + Edge TTS parity reference)
+    evidence: []
+  - id: hermes-agent
+    url: https://github.com/NousResearch/hermes-agent
+    license: MIT
+    status: integrated
+    role: MCP host + skill jarvislab-voice
+    evidence:
+      - skills/jarvislab-voice/SKILL.md
+      - scripts/install.ps1
