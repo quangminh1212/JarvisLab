@@ -150,7 +150,19 @@ def test_mcp_list_tools() -> None:
     )
 
 
+def _ensure_utf8_stdio() -> None:
+    """Avoid UnicodeEncodeError on Windows consoles using cp1252."""
+    for stream in (sys.stdout, sys.stderr):
+        reconf = getattr(stream, "reconfigure", None)
+        if callable(reconf):
+            try:
+                reconf(encoding="utf-8", errors="replace")
+            except Exception:
+                pass
+
+
 def main() -> int:
+    _ensure_utf8_stdio()
     print("JarvisLab self-test\n" + "=" * 40)
     test_imports()
     test_npm()
