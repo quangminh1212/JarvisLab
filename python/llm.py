@@ -51,23 +51,55 @@ def _load_xai_token() -> str | None:
 
 
 def resolve_llm_config() -> dict[str, Any]:
-    api_key = (
-        os.environ.get("JARVIS_API_KEY")
-        or os.environ.get("OPENAI_API_KEY")
-        or os.environ.get("XAI_API_KEY")
-        or _load_xai_token()
-    )
-    base_url = (
-        os.environ.get("JARVIS_BASE_URL")
-        or os.environ.get("OPENAI_BASE_URL")
-        or ("https://api.x.ai/v1" if api_key else "")
-    ).rstrip("/")
-    model = (
-        os.environ.get("JARVIS_MODEL")
-        or os.environ.get("OPENAI_MODEL")
-        or "grok-4-1-fast-non-reasoning"
-    )
-    return {"api_key": api_key, "base_url": base_url, "model": model}
+    """Pick API credentials without mixing OpenAI keys into xAI endpoints.
+
+    Priority:
+      1) JARVIS_API_KEY (+ optional JARVIS_BASE_URL / JARVIS_MODEL)
+      2) XAI_API_KEY or Hermes xAI OAuth → api.x.ai
+      3) OPENAI_API_KEY → OPENAI_BASE_URL or api.openai.com
+
+    OPENAI_API_KEY is often set for other tools and is invalid on api.x.ai;
+    preferring it before the Hermes xAI token caused HTTP 400 Incorrect API key.
+    """
+    jarvis_key = os.environ.get("JARVIS_API_KEY")
+    jarvis_base = (os.environ.get("JARVIS_BASE_URL") or "").rstrip("/")
+    jarvis_model = os.environ.get("JARVIS_MODEL")
+
+    if jarvis_key:
+        return {
+            "api_key": jarvis_key,
+            "base_url": jarvis_base or "https://api.x.ai/v1",
+            "model": jarvis_model
+            or os.environ.get("OPENAI_MODEL")
+            or "grok-4-1-fast-non-reasoning",
+        }
+
+    xai_key = os.environ.get("XAI_API_KEY") or _load_xai_token()
+    if xai_key:
+        return {
+            "api_key": xai_key,
+            "base_url": jarvis_base or "https://api.x.ai/v1",
+            "model": jarvis_model
+            or os.environ.get("OPENAI_MODEL")
+            or "grok-4-1-fast-non-reasoning",
+        }
+
+    openai_key = os.environ.get("OPENAI_API_KEY")
+    if openai_key:
+        openai_base = (
+            jarvis_base
+            or (os.environ.get("OPENAI_BASE_URL") or "").rstrip("/")
+            or "https://api.openai.com/v1"
+        )
+        return {
+            "api_key": openai_key,
+            "base_url": openai_base,
+            "model": jarvis_model
+            or os.environ.get("OPENAI_MODEL")
+            or "gpt-4o-mini",
+        }
+
+    return {"api_key": None, "base_url": "", "model": jarvis_model or ""}
 
 
 def rule_based_reply(text: str) -> str:
@@ -139,6 +171,14 @@ def chat_completion(
         # strip accidental markdown
         content = content.replace("**", "").replace("`", "").strip()
         return content, "llm"
+    except urllib.error.HTTPError as e:
+        detail = ""
+        try:
+            detail = e.read().decode("utf-8", errors="replace")[:240]
+        except Exception:
+            pass
+        print(f"[llm] error: HTTP {e.code} {detail or e}", flush=True)
+        return rule_based_reply(user_text), "rules"
     except Exception as e:
         print(f"[llm] error: {e}", flush=True)
         return rule_based_reply(user_text), "rules"
