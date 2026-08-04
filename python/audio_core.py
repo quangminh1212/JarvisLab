@@ -190,7 +190,7 @@ def record_vad(
     """
     device = None if mic_index < 0 else mic_index
     chunk_sec = 0.08
-    silence_sec = _envf("VOICE_SILENCE_SEC", 0.75)
+    silence_sec = _envf("VOICE_SILENCE_SEC", 2.0)
     min_speech = _envf("VOICE_MIN_SPEECH_SEC", 0.4)
     base_thr = _envf("VOICE_THRESHOLD", 0.0020)
     gain = _envf("VOICE_GAIN", 70.0)

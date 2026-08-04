@@ -76,7 +76,7 @@ else:
 # ── VAD constants (tuned for weak USB mics) ───────────────────────────────────
 FS = 16000
 CHUNK_SEC = 0.08
-SILENCE_SEC = float(os.environ.get("VOICE_SILENCE_SEC", "0.75"))
+SILENCE_SEC = float(os.environ.get("VOICE_SILENCE_SEC", "2.0"))
 MIN_SPEECH_SEC = float(os.environ.get("VOICE_MIN_SPEECH_SEC", "0.4"))
 THRESHOLD = float(os.environ.get("VOICE_THRESHOLD", "0.0020"))
 GAIN = float(os.environ.get("VOICE_GAIN", "70.0"))
